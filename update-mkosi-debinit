@@ -1,0 +1,42 @@
+#!/usr/bin/bash
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
+set -euxo pipefail
+
+command -v mkosi >/dev/null 2>&1 || exit 1
+
+OUTPUT=$1
+VERSION=${2:-$(uname -r)}
+OUTPUTDIR=$(mktemp -d)
+ROOTFS=${ROOTFS:-}
+
+[[ -z $OUTPUT ]] && exit 2
+
+INITRD_CONFIG=
+[[ -d $ROOTFS/usr/lib/mkosi-debinit ]] && INITRD_CONFIG=/usr/lib/mkosi-debinit
+[[ -d $ROOTFS/etc/mkosi-debinit ]] && INITRD_CONFIG=/etc/mkosi-debinit
+[[ -z "$INITRD_CONFIG" ]] && INITRD_CONFIG=initrd
+
+MKOSI_ARGS=${MKOSI_ARGS:-}
+IFS=' ' read -r -a MKOSI_ARGS <<< "$MKOSI_ARGS"
+[[ -n $ROOTFS ]] && MKOSI_ARGS+=(--tools-tree="$ROOTFS")
+for path in /usr/lib/modules/"${VERSION}" /usr/lib/firmware /etc/fstab /etc/crypttab
+do
+    [[ -e $ROOTFS$path ]] && MKOSI_ARGS+=(--extra-tree="$ROOTFS${path}":"${path}")
+done
+
+function finish {
+  rm -rf "${OUTPUTDIR}"
+    echo "Done."
+}
+trap finish EXIT ERR
+
+mkosi \
+    --directory '' \
+    --include="$INITRD_CONFIG" \
+    "${MKOSI_ARGS[@]}" \
+    --environment=KERNEL_VERSION="${VERSION}" \
+    --output-dir="$OUTPUTDIR" \
+    build
+
+cp "$OUTPUTDIR"/initrd.cpio.zst "$OUTPUT"

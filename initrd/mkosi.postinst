@@ -1,0 +1,302 @@
+#!/usr/bin/bash
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
+set -xeu
+
+move () {
+    local path=$1 # starting always with /
+    local orig=$2
+    local target=$3
+
+    mkdir -p "$(dirname "${target}""${path}")"
+    mv "${orig}""${path}" "${target}""${path}"
+}
+
+MODULES_INCLUDE=(
+    /arch/x86/crypto
+    /block
+    /crypto
+    /drivers/acpi
+    /drivers/ata
+    /drivers/block
+    /drivers/cdrom
+    /drivers/char/hw_random/virtio-rng.ko.xz
+    /drivers/char/virtio_console.ko.xz
+    /drivers/crypto
+    /drivers/devfreq
+    /drivers/dma/dw/dw_dmac_core.ko.xz
+    /drivers/dma/dw/dw_dmac.ko.xz
+    /drivers/extcon
+    /drivers/firewire/firewire-core.ko.xz
+    /drivers/firewire/firewire-ohci.ko.xz
+    /drivers/firewire/firewire-sbp2.ko.xz
+    /drivers/firmware/qemu_fw_cfg.ko.xz
+    /drivers/gpu/drm/drm.ko.xz
+    /drivers/hid/amd-sfh-hid
+    /drivers/hid/hid-a4tech.ko.xz
+    /drivers/hid/hid-accutouch.ko.xz
+    /drivers/hid/hid-alps.ko.xz
+    /drivers/hid/hid-apple.ko.xz
+    /drivers/hid/hid-appleir.ko.xz
+    /drivers/hid/hid-asus.ko.xz
+    /drivers/hid/hid-aureal.ko.xz
+    /drivers/hid/hid-axff.ko.xz
+    /drivers/hid/hid-belkin.ko.xz
+    /drivers/hid/hid-betopff.ko.xz
+    /drivers/hid/hid-bigbenff.ko.xz
+    /drivers/hid/hid-cherry.ko.xz
+    /drivers/hid/hid-chicony.ko.xz
+    /drivers/hid/hid-cmedia.ko.xz
+    /drivers/hid/hid-corsair.ko.xz
+    /drivers/hid/hid-cougar.ko.xz
+    /drivers/hid/hid-cp2112.ko.xz
+    /drivers/hid/hid-creative-sb0540.ko.xz
+    /drivers/hid/hid-cypress.ko.xz
+    /drivers/hid/hid-dr.ko.xz
+    /drivers/hid/hid-elan.ko.xz
+    /drivers/hid/hid-elecom.ko.xz
+    /drivers/hid/hid-elo.ko.xz
+    /drivers/hid/hid-emsff.ko.xz
+    /drivers/hid/hid-ezkey.ko.xz
+    /drivers/hid/hid-ft260.ko.xz
+    /drivers/hid/hid-gaff.ko.xz
+    /drivers/hid/hid-gembird.ko.xz
+    /drivers/hid/hid-generic.ko.xz
+    /drivers/hid/hid-gfrm.ko.xz
+    /drivers/hid/hid-glorious.ko.xz
+    /drivers/hid/hid-google-hammer.ko.xz
+    /drivers/hid/hid-gt683r.ko.xz
+    /drivers/hid/hid-gyration.ko.xz
+    /drivers/hid/hid-holtek-kbd.ko.xz
+    /drivers/hid/hid-holtek-mouse.ko.xz
+    /drivers/hid/hid-holtekff.ko.xz
+    /drivers/hid/hid-hyperv.ko.xz
+    /drivers/hid/hid-icade.ko.xz
+    /drivers/hid/hid-ite.ko.xz
+    /drivers/hid/hid-jabra.ko.xz
+    /drivers/hid/hid-kensington.ko.xz
+    /drivers/hid/hid-keytouch.ko.xz
+    /drivers/hid/hid-kye.ko.xz
+    /drivers/hid/hid-lcpower.ko.xz
+    /drivers/hid/hid-led.ko.xz
+    /drivers/hid/hid-lenovo.ko.xz
+    /drivers/hid/hid-lg-g15.ko.xz
+    /drivers/hid/hid-logitech-dj.ko.xz
+    /drivers/hid/hid-logitech-hidpp.ko.xz
+    /drivers/hid/hid-logitech.ko.xz
+    /drivers/hid/hid-macally.ko.xz
+    /drivers/hid/hid-magicmouse.ko.xz
+    /drivers/hid/hid-maltron.ko.xz
+    /drivers/hid/hid-mcp2221.ko.xz
+    /drivers/hid/hid-mf.ko.xz
+    /drivers/hid/hid-microsoft.ko.xz
+    /drivers/hid/hid-monterey.ko.xz
+    /drivers/hid/hid-multitouch.ko.xz
+    /drivers/hid/hid-nintendo.ko.xz
+    /drivers/hid/hid-nti.ko.xz
+    /drivers/hid/hid-ntrig.ko.xz
+    /drivers/hid/hid-ortek.ko.xz
+    /drivers/hid/hid-penmount.ko.xz
+    /drivers/hid/hid-petalynx.ko.xz
+    /drivers/hid/hid-picolcd.ko.xz
+    /drivers/hid/hid-pl.ko.xz
+    /drivers/hid/hid-plantronics.ko.xz
+    /drivers/hid/hid-playstation.ko.xz
+    /drivers/hid/hid-primax.ko.xz
+    /drivers/hid/hid-prodikeys.ko.xz
+    /drivers/hid/hid-redragon.ko.xz
+    /drivers/hid/hid-retrode.ko.xz
+    /drivers/hid/hid-rmi.ko.xz
+    /drivers/hid/hid-roccat-arvo.ko.xz
+    /drivers/hid/hid-roccat-common.ko.xz
+    /drivers/hid/hid-roccat-isku.ko.xz
+    /drivers/hid/hid-roccat-kone.ko.xz
+    /drivers/hid/hid-roccat-koneplus.ko.xz
+    /drivers/hid/hid-roccat-konepure.ko.xz
+    /drivers/hid/hid-roccat-kovaplus.ko.xz
+    /drivers/hid/hid-roccat-lua.ko.xz
+    /drivers/hid/hid-roccat-pyra.ko.xz
+    /drivers/hid/hid-roccat-ryos.ko.xz
+    /drivers/hid/hid-roccat-savu.ko.xz
+    /drivers/hid/hid-roccat.ko.xz
+    /drivers/hid/hid-saitek.ko.xz
+    /drivers/hid/hid-samsung.ko.xz
+    /drivers/hid/hid-semitek.ko.xz
+    /drivers/hid/hid-sensor-custom.ko.xz
+    /drivers/hid/hid-sensor-hub.ko.xz
+    /drivers/hid/hid-sjoy.ko.xz
+    /drivers/hid/hid-sony.ko.xz
+    /drivers/hid/hid-speedlink.ko.xz
+    /drivers/hid/hid-steam.ko.xz
+    /drivers/hid/hid-steelseries.ko.xz
+    /drivers/hid/hid-sunplus.ko.xz
+    /drivers/hid/hid-thrustmaster.ko.xz
+    /drivers/hid/hid-tivo.ko.xz
+    /drivers/hid/hid-tmff.ko.xz
+    /drivers/hid/hid-topseed.ko.xz
+    /drivers/hid/hid-twinhan.ko.xz
+    /drivers/hid/hid-u2fzero.ko.xz
+    /drivers/hid/hid-uclogic.ko.xz
+    /drivers/hid/hid-udraw-ps3.ko.xz
+    /drivers/hid/hid-viewsonic.ko.xz
+    /drivers/hid/hid-vivaldi-common.ko.xz
+    /drivers/hid/hid-vivaldi.ko.xz
+    /drivers/hid/hid-waltop.ko.xz
+    /drivers/hid/hid-wiimote.ko.xz
+    /drivers/hid/hid-xinmo.ko.xz
+    /drivers/hid/hid-zpff.ko.xz
+    /drivers/hid/hid-zydacron.ko.xz
+    /drivers/hid/hid.ko.xz
+    /drivers/hid/i2c-hid
+    /drivers/hid/intel-ish-hid
+    /drivers/hid/surface-hid
+    /drivers/hid/uhid.ko.xz
+    /drivers/hid/usbhid/usbhid.ko.xz
+    /drivers/hid/wacom.ko.xz
+    /drivers/hv
+    /drivers/iio/industrialio.ko.xz
+    /drivers/infiniband/core
+    /drivers/infiniband/ulp/srp
+    /drivers/input/ff-memless.ko.xz
+    /drivers/input/keyboard
+    /drivers/input/matrix-keymap.ko.xz
+    /drivers/input/rmi4
+    /drivers/input/serio
+    /drivers/input/sparse-keymap.ko.xz
+    /drivers/leds/led-class-multicolor.ko.xz
+    /drivers/leds/trigger/ledtrig-audio.ko.xz
+    /drivers/md
+    /drivers/media/rc/rc-core.ko.xz
+    /drivers/memstick/core
+    /drivers/message
+    /drivers/mfd/intel_pmc_bxt.ko.xz
+    /drivers/mfd/kempld-core.ko.xz
+    /drivers/misc/cardreader
+    /drivers/misc/cb710
+    /drivers/misc/eeprom
+    /drivers/misc/mei
+    /drivers/misc/tifm_core.ko.xz
+    /drivers/mmc
+    /drivers/mtd/ftl.ko.xz
+    /drivers/mtd/inftl.ko.xz
+    /drivers/mtd/mtd_blkdevs.ko.xz
+    /drivers/mtd/mtd.ko.xz
+    /drivers/mtd/mtdblock_ro.ko.xz
+    /drivers/mtd/mtdblock.ko.xz
+    /drivers/mtd/mtdswap.ko.xz
+    /drivers/mtd/nftl.ko.xz
+    /drivers/mtd/rfd_ftl.ko.xz
+    /drivers/mtd/ssfdc.ko.xz
+    /drivers/mtd/ubi
+    /drivers/net/ethernet/broadcom/cnic.ko.xz
+    /drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko.xz
+    /drivers/net/ethernet/qlogic
+    /drivers/net/wireless/marvell/libertas/libertas_sdio.ko.xz
+    /drivers/net/wireless/marvell/libertas/libertas.ko.xz
+    /drivers/nvdimm
+    /drivers/nvme
+    /drivers/parport
+    /drivers/pci/controller
+    /drivers/pcmcia
+    /drivers/pinctrl
+    /drivers/platform/surface/aggregator
+    /drivers/platform/x86/asus-wmi.ko.xz
+    /drivers/platform/x86/wmi.ko.xz
+    /drivers/scsi
+    /drivers/spi/spi-pxa2xx-platform.ko.xz
+    /drivers/staging/rts5208
+    /drivers/target/loopback
+    /drivers/target/target_core_mod.ko.xz
+    /drivers/tty/serial
+    /drivers/ufs
+    /drivers/uio/uio.ko.xz
+    /drivers/usb/common
+    /drivers/usb/core
+    /drivers/usb/host
+    /drivers/usb/image
+    /drivers/usb/roles
+    /drivers/usb/storage
+    /drivers/usb/typec
+    /drivers/vdpa/vdpa.ko.xz
+    /drivers/virt/vboxguest
+    /drivers/virtio/virtio_mem.ko.xz
+    /drivers/virtio/virtio_mmio.ko.xz
+    /drivers/virtio/virtio_vdpa.ko.xz
+    /drivers/watchdog
+    /fs
+    /lib
+    /net/9p
+    /net/ceph/libceph.ko.xz
+    /net/dns_resolver
+    /net/ipv4/udp_tunnel.ko.xz
+    /net/ipv6/ip6_udp_tunnel.ko.xz
+    /net/rfkill
+    /net/rxrpc
+    /net/sunrpc/sunrpc.ko.xz
+    /net/tls
+    /net/wireless/cfg80211.ko.xz
+    /sound/core/snd-rawmidi.ko.xz
+    /sound/core/snd-seq-device.ko.xz
+    /sound/core/snd.ko.xz
+    /sound/soundcore.ko.xz
+)
+
+echo "Embedd kernel modules..."
+KERNEL_MODULES_ORIG=${BUILDROOT}/usr/lib/modules/${KERNEL_VERSION}/kernel.orig
+KERNEL_MODULES_DEST=${BUILDROOT}/usr/lib/modules/${KERNEL_VERSION}/kernel
+
+if [[ -d $KERNEL_MODULES_DEST ]]; then
+    mv "${KERNEL_MODULES_DEST}" "${KERNEL_MODULES_ORIG}"
+
+    for ITEM in "${MODULES_INCLUDE[@]}"; do
+        move "$ITEM" "${KERNEL_MODULES_ORIG}" "${KERNEL_MODULES_DEST}"
+    done
+
+    rm -rf "${KERNEL_MODULES_ORIG}"
+fi
+
+FIRMWARE_INCLUDE=(
+    /advansys/3550.bin
+    /advansys/38C0800.bin
+    /advansys/38C1600.bin
+    /advansys/mcode.bin
+    /cis
+    /cxgb4/t4fw-1.27.3.0.bin
+    /cxgb4/t4fw.bin
+    /cxgb4/t5fw-1.27.3.0.bin
+    /cxgb4/t5fw.bin
+    /cxgb4/t6fw-1.27.3.0.bin
+    /cxgb4/t6fw.bin
+    /ene-ub6250/ms_init.bin
+    /ene-ub6250/ms_rdwr.bin
+    /ene-ub6250/msp_rdwr.bin
+    /ene-ub6250/sd_init1.bin
+    /ene-ub6250/sd_init2.bin
+    /ene-ub6250/sd_rdwr.bin
+    /isci/isci_firmware.bin
+    /qat_895xcc_mmp.bin
+    /qat_895xcc.bin
+    /qat_c3xxx_mmp.bin
+    /qat_c3xxx.bin
+    /qat_c62x_mmp.bin
+    /qat_c62x.bin
+    /regulatory.db
+    /regulatory.db-debian
+    /regulatory.db.p7s
+    /regulatory.db.p7s-debian
+    /rp2.fw
+)
+echo "Embedd firmeware..."
+
+FIRMWARE_ORIG=${BUILDROOT}/usr/lib/firmware.orig
+FIRMWARE_DEST=${BUILDROOT}/usr/lib/firmware
+
+if [[ -d $FIRMWARE_DEST ]]; then
+    mv "${FIRMWARE_DEST}" "${FIRMWARE_ORIG}"
+
+    for ITEM in "${FIRMWARE_INCLUDE[@]}"; do
+        move "$ITEM" "${FIRMWARE_ORIG}" "${FIRMWARE_DEST}"
+    done
+
+    rm -rf "${FIRMWARE_ORIG}"
+fi
