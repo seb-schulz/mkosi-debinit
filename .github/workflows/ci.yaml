@@ -1,0 +1,45 @@
+---
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
+name: Test Suite
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README*'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'README*'
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ toJSON(matrix.distro) }}-${{ matrix.phase }}-${{ github.ref }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        distro:
+          - name: docker.io/debian
+            tag: testing
+        phase:
+          - INITRD_BASIC
+          - DEBUG
+    container:
+      image: "${{ matrix.distro.name }}:${{ matrix.distro.tag }}"
+      options: --privileged
+      env:
+        MKOSI_CACHE: /var/tmp/mkosi-debinit.cache
+      volumes: ["/var/tmp:/var/tmp"]
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: ./tests.sh DEPS
+
+      - name: ${{ matrix.phase }} on ${{ matrix.distro.name }}:${{ matrix.distro.tag }}
+        run: ./tests.sh ${{ matrix.phase }}
