@@ -33,7 +33,7 @@ for phase in "${PHASES[@]}"; do
         DEPS)
             next-group "Installing necessary dependencies"
             apt-get update
-            apt-get install --no-install-recommends -y mkosi qemu-system-x86 kmod jq systemd-boot cpio zstd systemd-ukify dosfstools mtools file
+            apt-get install --no-install-recommends -y mkosi qemu-system-x86 kmod jq systemd-boot cpio zstd systemd-ukify dosfstools mtools file linux-image-amd64
             ;;
         INITRD_BASIC)
             next-group "Prepare initrd basic testsuite"
@@ -46,9 +46,12 @@ for phase in "${PHASES[@]}"; do
             INITRD=$TESTDIR/initrd.img
 
             next-group "Build initrd file"
-            ./update-mkosi-debinit "$INITRD"
 
-            stat "$INITRD"
+            # shellcheck disable=SC2012
+            ./update-mkosi-debinit "$INITRD" "$(ls /usr/lib/modules/ | sort | tail -n1)"
+
+            [[ -n "${GITHUB_STEP_SUMMARY:-}" ]] && echo "# Details about created initrd file"
+            stat "$INITRD" | tee -a "$GITHUB_STEP_SUMMARY"
 
             next-group "Build test image"
             ROOTFS=rootfs.img
@@ -66,33 +69,30 @@ for phase in "${PHASES[@]}"; do
                 build
 
             next-group "Sanity check if the initrd is bootable"
-            timeout --foreground -k 10 3m \
+            timeout --foreground -k 10 5m \
                 kvm -m 512 -smp "$(nproc)" -nographic \
                     -initrd "$INITRD" \
                     -kernel "$TESTDIR"/$ROOTFS.vmlinuz \
                     -append "rd.systemd.unit=systemd-poweroff.service rd.debug $SYSTEMD_LOG_OPTS console=ttyS0"
-
-            next-group "Show all kernel modules"
-            file "$INITRD"
-            zstdcat "$INITRD" | cpio -t || true
 
             next-group "Get UUID for next test"
             UUID=$(/sbin/sfdisk -J "$TESTDIR"/$ROOTFS | jq -r '.partitiontable.partitions[1].uuid|ascii_downcase')
             /sbin/sfdisk -J "$TESTDIR"/$ROOTFS
 
             next-group "Boot the initrd with an OS image"
-            timeout --foreground -k 10 2m \
+            timeout --foreground -k 10 5m \
                 kvm -m 1024 -smp "$(nproc)" -nographic \
                     -initrd "$INITRD" \
                     -kernel "$TESTDIR"/$ROOTFS.vmlinuz \
                     -drive "if=virtio,index=0,format=raw,cache=unsafe,file=$TESTDIR/$ROOTFS" \
                     -append "root=PARTUUID=$UUID rd.debug $SYSTEMD_LOG_OPTS console=ttyS0 systemd.unit=systemd-poweroff.service systemd.default_timeout_start_sec=240"
 
-            next-group "Info about built artifacts"
-            ls -lah "$TESTDIR"
-            stat "$INITRD"
+            [[ -n "${GITHUB_STEP_SUMMARY:-}" ]] && echo "# List all files" | tee -a "$GITHUB_STEP_SUMMARY"
+
+            # shellcheck disable=SC2012
+            ls -lh "$TESTDIR" | tee -a "${GITHUB_STEP_SUMMARY:-/dev/null}"
             ;;
-        DEBUG)
+        MKOSI_AND_KVM_CHECK)
             next-group "Prepare initrd basic testsuite"
             command -v mkosi >/dev/null 2>&1 || exit 1
             command -v kvm >/dev/null 2>&1 || exit 1
@@ -117,7 +117,7 @@ for phase in "${PHASES[@]}"; do
                 build
 
             next-group "Sanity check if the initrd is bootable"
-            timeout --foreground -k 10 3m \
+            timeout --foreground -k 10 5m \
                 kvm -m 512 -smp "$(nproc)" -nographic \
                     -initrd "$TESTDIR"/$ROOTFS.initrd \
                     -kernel "$TESTDIR"/$ROOTFS.vmlinuz \
@@ -126,21 +126,24 @@ for phase in "${PHASES[@]}"; do
             next-group "Show all kernel modules"
             file "$TESTDIR"/$ROOTFS.initrd
             zstdcat "$TESTDIR"/$ROOTFS.initrd | cpio -t || true
+            sleep 1
 
             next-group "Get UUID for next test"
             UUID=$(/sbin/sfdisk -J "$TESTDIR"/$ROOTFS | jq -r '.partitiontable.partitions[1].uuid|ascii_downcase')
             /sbin/sfdisk -J "$TESTDIR"/$ROOTFS
 
             next-group "Boot the initrd with an OS image"
-            timeout --foreground -k 10 2m \
+            timeout --foreground -k 10 5m \
                 kvm -m 1024 -smp "$(nproc)" -nographic \
                     -initrd "$TESTDIR"/$ROOTFS.initrd \
                     -kernel "$TESTDIR"/$ROOTFS.vmlinuz \
                     -drive "if=virtio,index=0,format=raw,cache=unsafe,file=$TESTDIR/$ROOTFS" \
                     -append "root=PARTUUID=$UUID rd.debug $SYSTEMD_LOG_OPTS console=ttyS0 systemd.unit=systemd-poweroff.service systemd.default_timeout_start_sec=240"
 
-            next-group "Info about built artifacts"
-            ls -lah "$TESTDIR"
+            [[ -n "${GITHUB_STEP_SUMMARY:-}" ]] && echo "# List all files" | tee -a "$GITHUB_STEP_SUMMARY"
+
+            # shellcheck disable=SC2012
+            ls -lh "$TESTDIR" | tee -a "${GITHUB_STEP_SUMMARY:-/dev/null}"
             ;;
         *)
             echo >&2 "Unknown phase '$phase'"

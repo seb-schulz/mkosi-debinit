@@ -15,7 +15,7 @@ ROOTFS=${ROOTFS:-}
 INITRD_CONFIG=
 [[ -d $ROOTFS/usr/lib/mkosi-debinit ]] && INITRD_CONFIG=/usr/lib/mkosi-debinit
 [[ -d $ROOTFS/etc/mkosi-debinit ]] && INITRD_CONFIG=/etc/mkosi-debinit
-[[ -z "$INITRD_CONFIG" ]] && INITRD_CONFIG=initrd
+[[ -z "$INITRD_CONFIG" ]] && INITRD_CONFIG="$PWD"/initrd
 
 MKOSI_ARGS=${MKOSI_ARGS:-}
 IFS=' ' read -r -a MKOSI_ARGS <<< "$MKOSI_ARGS"
@@ -24,6 +24,8 @@ for path in /usr/lib/modules/"${VERSION}" /usr/lib/firmware /etc/fstab /etc/cryp
 do
     [[ -e $ROOTFS$path ]] && MKOSI_ARGS+=(--extra-tree="$ROOTFS${path}":"${path}")
 done
+
+cat "$ROOTFS"/etc/fstab
 
 function finish {
   rm -rf "${OUTPUTDIR}"
