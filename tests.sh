@@ -50,7 +50,7 @@ for phase in "${PHASES[@]}"; do
             # shellcheck disable=SC2012
             ./update-mkosi-debinit "$INITRD" "$(ls /usr/lib/modules/ | sort | tail -n1)"
 
-            [[ -n "${GITHUB_STEP_SUMMARY:-}" ]] && echo "# Details about created initrd file"
+            [[ -n "${GITHUB_STEP_SUMMARY:-}" ]] && echo "# Details about created initrd file" | tee -a "$GITHUB_STEP_SUMMARY"
             stat "$INITRD" | tee -a "$GITHUB_STEP_SUMMARY"
 
             next-group "Build test image"
