@@ -51,7 +51,7 @@ for phase in "${PHASES[@]}"; do
             ./update-mkosi-debinit "$INITRD" "$(ls /usr/lib/modules/ | sort | tail -n1)"
 
             [[ -n "${GITHUB_STEP_SUMMARY:-}" ]] && echo "# Details about created initrd file" | tee -a "$GITHUB_STEP_SUMMARY"
-            stat "$INITRD" | tee -a "$GITHUB_STEP_SUMMARY"
+            stat "$INITRD" | tee -a "${GITHUB_STEP_SUMMARY:-/dev/null}"
 
             next-group "Build test image"
             ROOTFS=rootfs.img

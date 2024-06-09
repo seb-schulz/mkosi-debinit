@@ -1,0 +1,13 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: mkosi-debinit
+Upstream-contact: Sebastian Schulz <16666034+seb-schulz@users.noreply.github.com>
+Source: https://github.com/seb-schulz/mkosi-debinit
+
+Files: *
+Copyright:
+  2024, Sebastian Schulz <16666034+seb-schulz@users.noreply.github.com>
+License: LGPL-2.1+
+
+License: LGPL-2.1+
+ On Debian GNU/Linux systems, the complete text of the LGPL 2.1
+ license can be found in `/usr/share/common-licenses/LGPL-2.1'.

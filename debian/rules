@@ -1,0 +1,18 @@
+#!/usr/bin/make -f
+
+DH_VERBOSE=1
+DH_OPTIONS=-v
+
+export
+
+%:
+	dh $@ --without autoreconf
+
+override_dh_auto_configure:
+override_dh_auto_build:
+override_dh_auto_test:
+
+execute_before_dh_auto_build:
+ifeq (,$(findstring nodoc,$(DEB_BUILD_PROFILES)))
+	pandoc -t man -s -o $(CURDIR)/update-mkosi-debinit.1 $(CURDIR)/update-mkosi-debinit.md
+endif
