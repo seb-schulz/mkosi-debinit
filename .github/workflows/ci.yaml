@@ -8,11 +8,13 @@ on:
       - main
     paths-ignore:
       - 'README*'
+      - 'debian/**'
   pull_request:
     branches:
       - main
     paths-ignore:
       - 'README*'
+      - 'debian/**'
 jobs:
   build:
     runs-on: ubuntu-22.04
