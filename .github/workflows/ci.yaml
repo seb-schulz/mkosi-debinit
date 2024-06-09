@@ -39,6 +39,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: ./tests.sh DEPS
+        run: ./scripts/tests.sh DEPS
       - name: ${{ matrix.phase }} on ${{ matrix.distro.name }}:${{ matrix.distro.tag }}
-        run: ./tests.sh ${{ matrix.phase }}
+        run: ./scripts/tests.sh ${{ matrix.phase }}
