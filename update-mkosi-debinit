@@ -34,6 +34,7 @@ trap finish EXIT ERR
 mkosi \
     --directory '' \
     --include="$INITRD_CONFIG" \
+    --workspace-dir=/var/tmp \
     "${MKOSI_ARGS[@]}" \
     --environment=KERNEL_VERSION="${VERSION}" \
     --output-dir="$OUTPUTDIR" \

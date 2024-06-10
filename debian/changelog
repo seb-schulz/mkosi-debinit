@@ -1,3 +1,9 @@
+mkosi-debinit (0.1.1) unstable; urgency=medium
+  * Add configs for mkosi
+  * Fix workspace dir when executing on a random directory
+  * Fix lintian issues
+ -- Sebastian Schulz <16666034+seb-schulz@users.noreply.github.com>  Mon, 10 Jun 2024 21:54:27 +0200
+
 mkosi-debinit (0.1.0) unstable; urgency=medium
   * Initial release
  -- Sebastian Schulz <16666034+seb-schulz@users.noreply.github.com>  Sun, 09 Jun 2024 12:51:21 +0200

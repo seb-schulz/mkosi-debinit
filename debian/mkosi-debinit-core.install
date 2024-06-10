@@ -1,1 +1,3 @@
 update-mkosi-debinit usr/bin
+initrd/mkosi.conf /usr/lib/mkosi-debinit/
+initrd/mkosi.postinst /usr/lib/mkosi-debinit/

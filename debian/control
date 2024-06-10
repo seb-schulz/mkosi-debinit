@@ -10,7 +10,7 @@ Homepage: https://github.com/seb-schulz/mkosi-debinit
 
 Package: mkosi-debinit-core
 Architecture: amd64
-Depends: mkosi, cpio, kmod, ${shlibs:Depends}, ${misc:Depends}
+Depends: mkosi, cpio, kmod, ${misc:Depends}
 Description: mkosi-debinit is an initramfs builder
  It is using mkosi to build initramfs images for the kernel.
  With the approach of building an image with mkosi, initramfs should become
