@@ -1,0 +1,37 @@
+{
+    "name": "mkosi-debinit",
+    "image": "docker.io/debian:testing",
+    "features": {
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "username": "vscode",
+            "userUid": "1000",
+            "userGid": "1000",
+            "upgradePackages": "true",
+            "installOhMyZsh": "false",
+            "installOhMyZshConfig": "false",
+            "nonFreePackages": "true"
+        },
+        "ghcr.io/devcontainers-contrib/features/apt-get-packages:1": {
+            "packages": "git,bash-completion"
+        },
+        "ghcr.io/devcontainers-community/npm-features/prettier:1": {}
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {},
+            "extensions": [
+                "ms-vscode.cpptools-extension-pack",
+                "esbenp.prettier-vscode"
+            ]
+        }
+    },
+    "runArgs": [
+        "--userns=keep-id",
+        "--privileged"
+    ],
+    "mounts": [
+        "type=bind,src=/var/tmp,dst=/var/tmp"
+    ],
+    "onCreateCommand": "mkdir -p /workspaces && sudo chown -R 1000:1000 /workspaces",
+    "containerUser": "vscode"
+}

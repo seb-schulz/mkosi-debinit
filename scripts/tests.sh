@@ -4,7 +4,7 @@
 echo "::group::Prepare testsuite"
 set -euxo pipefail
 
-MKOSI_CACHE=${MKOSI_CACHE:-"/var/tmp/mkosi-debinit.$(</etc/machine-id).cache"}
+[[ -f /etc/machine-id ]] && MKOSI_CACHE=${MKOSI_CACHE:-"/var/tmp/mkosi-debinit.$(</etc/machine-id).cache"} || MKOSI_CACHE=${MKOSI_CACHE:-"/var/tmp/mkosi-debinit.cache"}
 mkdir -p "$MKOSI_CACHE"
 
 # shellcheck disable=SC2206
@@ -63,6 +63,7 @@ for phase in "${PHASES[@]}"; do
                 --format=disk \
                 --bootable \
                 --package=linux-image-amd64,udev,systemd-boot \
+                --repart-dir=tests/fixtures/test-image-definitions \
                 --extra-search-path=/usr/sbin \
                 --output-dir="$TESTDIR" \
                 --output="$ROOTFS" \
@@ -112,6 +113,7 @@ for phase in "${PHASES[@]}"; do
                 --bootable \
                 --package=linux-image-amd64,udev,systemd-boot \
                 --extra-search-path=/usr/sbin \
+                --repart-dir=tests/fixtures/test-image-definitions \
                 --output-dir="$TESTDIR" \
                 --output="$ROOTFS" \
                 build
