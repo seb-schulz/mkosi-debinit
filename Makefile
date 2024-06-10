@@ -19,6 +19,14 @@ else
 	$(PODMAN) run --rm -v ${PWD}:/workspace:z --workdir=/workspace docker.io/debian:testing /usr/bin/bash /workspace/scripts/$@.sh
 endif
 
+.PHONY: lint
+lint:
+ifeq ($(PODMAN),)
+	$(error podman is missing)
+else
+	$(PODMAN) run --rm -v ${PWD}:/workspace:z --workdir=/workspace docker.io/debian:testing /usr/bin/bash /workspace/scripts/$@.sh DEPS SHELL DPKG
+endif
+
 
 .PHONY: clean
 clean:

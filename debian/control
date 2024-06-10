@@ -13,4 +13,5 @@ Architecture: amd64
 Depends: mkosi, cpio, kmod, ${shlibs:Depends}, ${misc:Depends}
 Description: mkosi-debinit is an initramfs builder
  It is using mkosi to build initramfs images for the kernel.
- With the approach of building an image with mkosi, initramfs should become more reproducable and better testable.
+ With the approach of building an image with mkosi, initramfs should become
+ more reproducable and better testable.

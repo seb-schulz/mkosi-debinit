@@ -1,22 +1,24 @@
 ---
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
-name: Test Suite
+name: CI
 on:
   push:
     branches:
       - main
     paths-ignore:
-      - 'README*'
-      - 'debian/**'
+      - "README*"
+      - "debian/**"
+      - ".devcontainer.json"
   pull_request:
     branches:
       - main
     paths-ignore:
-      - 'README*'
-      - 'debian/**'
+      - "README*"
+      - "debian/**"
+      - ".devcontainer.json"
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.workflow }}-${{ toJSON(matrix.distro) }}-${{ matrix.phase }}-${{ github.ref }}
@@ -39,8 +41,24 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v4
-
       - name: Install dependencies
         run: ./scripts/tests.sh DEPS
       - name: ${{ matrix.phase }} on ${{ matrix.distro.name }}:${{ matrix.distro.tag }}
         run: ./scripts/tests.sh ${{ matrix.phase }}
+  lint:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+    container:
+      image: "docker.io/debian:testing"
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: ./scripts/lint.sh DEPS
+      - name: Check DPKG
+        run: |
+          ./scripts/build.sh
+          ./scripts/lint.sh DPKG
+      - name: Check SHELL
+        run: ./scripts/lint.sh SHELL
