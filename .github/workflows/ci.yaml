@@ -45,6 +45,20 @@ jobs:
         run: ./scripts/tests.sh DEPS
       - name: ${{ matrix.phase }} on ${{ matrix.distro.name }}:${{ matrix.distro.tag }}
         run: ./scripts/tests.sh ${{ matrix.phase }}
+  build:
+    runs-on: ubuntu-22.04
+    container:
+      image: "docker.io/debian:testing"
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+      - name: Build packages
+        run: ./scripts/build.sh
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: dist/mkosi-debinit*.deb
   lint:
     runs-on: ubuntu-22.04
     strategy:
