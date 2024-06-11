@@ -5,3 +5,4 @@ debian/debhelper-build-stamp
 debian/files
 debian/mkosi-debinit*.substvars
 debian/mkosi-debinit-core/
+debian/mkosi-debinit/*

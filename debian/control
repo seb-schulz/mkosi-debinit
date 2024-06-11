@@ -8,8 +8,18 @@ Vcs-Browser: https://github.com/seb-schulz/mkosi-debinit
 Vcs-Git: https://github.com/seb-schulz/mkosi-debinit.git
 Homepage: https://github.com/seb-schulz/mkosi-debinit
 
+Package: mkosi-debinit
+Architecture: all
+Depends: mkosi-debinit-core (>= ${binary:Version}), ${misc:Depends}
+Provides: linux-initramfs-tool
+Conflicts: initramfs-tools, live-tools, dracut
+Description: Initramfs generator using mkosi
+ This package builds a bootable initramfs for Linux kernel packages.  The
+ initramfs is loaded along with the kernel and is responsible for
+ mounting the root filesystem and starting the main init system.
+
 Package: mkosi-debinit-core
-Architecture: amd64
+Architecture: all
 Depends: mkosi, cpio, kmod, ${misc:Depends}
 Description: mkosi-debinit is an initramfs builder
  It is using mkosi to build initramfs images for the kernel.
