@@ -8,7 +8,7 @@ set -euxo pipefail
 mkdir -p "$MKOSI_CACHE"
 
 # shellcheck disable=SC2206
-PHASES=(${@:-DEPS INITRD_BASIC})
+PHASES=(${@:-INITRD_BASIC})
 SYSTEMD_LOG_OPTS="systemd.log_target=console udev.log_level=info systemd.default_standard_output=journal+console systemd.status_unit_format=name"
 
 CLEANUP=()
@@ -30,11 +30,6 @@ function next-group() {
 
 for phase in "${PHASES[@]}"; do
     case "$phase" in
-        DEPS)
-            next-group "Installing necessary dependencies"
-            apt-get update
-            apt-get install --no-install-recommends -y mkosi qemu-system-x86 kmod jq systemd-boot cpio zstd systemd-ukify dosfstools mtools file linux-image-amd64
-            ;;
         INITRD_BASIC)
             next-group "Prepare initrd basic testsuite"
             command -v mkosi >/dev/null 2>&1 || exit 1

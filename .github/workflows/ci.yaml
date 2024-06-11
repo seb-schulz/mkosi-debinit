@@ -42,7 +42,7 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v4
       - name: Install dependencies
-        run: ./scripts/tests.sh DEPS
+        run: ./scripts/setup.sh tests
       - name: ${{ matrix.phase }} on ${{ matrix.distro.name }}:${{ matrix.distro.tag }}
         run: ./scripts/tests.sh ${{ matrix.phase }}
   build:
@@ -52,6 +52,8 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v4
+      - name: Install dependencies
+        run: ./scripts/setup.sh build
       - name: Build packages
         run: ./scripts/build.sh
       - name: Upload packages
@@ -74,7 +76,7 @@ jobs:
           name: packages
           path: dist/
       - name: Install dependencies
-        run: ./scripts/lint.sh DEPS
+        run: ./scripts/setup.sh lint
       - name: Check DPKG
         run: ./scripts/lint.sh DPKG
       - name: Check SHELL

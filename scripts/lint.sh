@@ -8,11 +8,6 @@ PHASES=(${@:-SHELL DPKG})
 
 for phase in "${PHASES[@]}"; do
     case "$phase" in
-        DEPS)
-            [[ $(id -u) != 0 ]] && SUDO=sudo || SUDO=
-            $SUDO apt-get update
-            $SUDO apt-get install --no-install-recommends -y lintian shellcheck
-            ;;
         SHELL)
             shellcheck update-mkosi-debinit scripts/*.sh
             ;;
