@@ -9,7 +9,7 @@ PHASES=(${@:-SHELL DPKG})
 for phase in "${PHASES[@]}"; do
     case "$phase" in
         SHELL)
-            shellcheck update-mkosi-debinit scripts/*.sh
+            shellcheck update-mkosi-debinit scripts/*.sh kernel/**/* debian/*.postinst
             ;;
         DPKG)
             # XXX: Allow running as root in rootless container and CI

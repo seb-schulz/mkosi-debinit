@@ -1,5 +1,8 @@
 mkosi-debinit (0.2.0) unstable; urgency=medium
   * Add mkosi-debinit package as drop-in replacement for other initramfs builder
+  * Add /etc/kernel/post*.d scripts
+  * Add Debian hooks
+  * Change working directory to output-dir when running update-mkosi-debinit to avoid fatals
  -- Sebastian Schulz <16666034+seb-schulz@users.noreply.github.com>  Tue, 11 Jun 2024 14:46:40 +0200
 
 mkosi-debinit (0.1.1) unstable; urgency=medium

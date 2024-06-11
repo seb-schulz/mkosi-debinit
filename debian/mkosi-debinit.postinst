@@ -1,0 +1,19 @@
+#!/bin/bash
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
+set -euxo pipefail
+
+if [ "x$1" != xtriggered ]; then
+    # activate trigger
+    if dpkg-trigger --no-await update-initramfs; then
+        echo "update-initramfs: deferring update (trigger activated)"
+        exit 0
+    fi
+else
+    if ls /boot/vmlinu[zx]-* >/dev/null 2>&1; then
+        # Regenerate initramfs for all kernel that are installed
+        for kernel in /boot/vmlinu[zx]-*; do
+            /etc/kernel/postinst.d/mkosi-debinit "${kernel#/boot/vmlinuz-}";
+        done
+    fi
+fi

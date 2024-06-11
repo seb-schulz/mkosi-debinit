@@ -26,10 +26,12 @@ do
 done
 
 function finish {
-  rm -rf "${OUTPUTDIR}"
+    popd
+    rm -rf "${OUTPUTDIR}"
     echo "Done."
 }
 trap finish EXIT ERR
+pushd "$OUTPUTDIR"
 
 mkosi \
     --directory '' \

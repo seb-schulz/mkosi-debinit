@@ -21,7 +21,8 @@
             "settings": {},
             "extensions": [
                 "ms-vscode.cpptools-extension-pack",
-                "esbenp.prettier-vscode"
+                "esbenp.prettier-vscode",
+                "timonwong.shellcheck"
             ]
         }
     },
