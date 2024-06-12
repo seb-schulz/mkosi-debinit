@@ -34,5 +34,6 @@
         "type=bind,src=/var/tmp,dst=/var/tmp"
     ],
     "onCreateCommand": "mkdir -p /workspaces && sudo chown -R 1000:1000 /workspaces",
+    "postCreateCommand": "make setup",
     "containerUser": "vscode"
 }

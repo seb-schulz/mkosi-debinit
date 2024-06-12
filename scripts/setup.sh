@@ -6,22 +6,8 @@ set -euxo pipefail
 [[ $(id -u) != 0 ]] && SUDO=sudo || SUDO=
 $SUDO apt-get update
 
-# shellcheck disable=SC2206
-JOBS=(${@:-tests build lint})
+lint_packages=(lintian shellcheck)
+build_packages=(build-essential devscripts debhelper pandoc fakeroot)
+tests_packages=(mkosi qemu-system-x86 kmod jq systemd-boot cpio zstd systemd-ukify dosfstools mtools file linux-image-amd64)
 
-for phase in "${JOBS[@]}"; do
-    case "$phase" in
-        lint)
-            $SUDO apt-get install --no-install-recommends -y lintian shellcheck
-            ;;
-        build)
-            $SUDO apt-get install --no-install-recommends -y build-essential devscripts debhelper pandoc fakeroot
-            ;;
-        tests)
-            $SUDO apt-get install --no-install-recommends -y mkosi qemu-system-x86 kmod jq systemd-boot cpio zstd systemd-ukify dosfstools mtools file linux-image-amd64
-            ;;
-        *)
-            echo >&2 "Unknown phase '$phase'"
-            exit 1
-    esac
-done
+$SUDO apt-get install --no-install-recommends -y "${lint_packages[@]}" "${build_packages[@]}" "${tests_packages[@]}"
