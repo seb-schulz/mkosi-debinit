@@ -8,7 +8,7 @@ move () {
     local orig=$2
     local target=$3
 
-    if [[ -e "${target}""${path}" ]]; then
+    if [[ -e "${orig}""${path}" ]]; then
         mkdir -p "$(dirname "${target}""${path}")"
         mv "${orig}""${path}" "${target}""${path}"
     fi
