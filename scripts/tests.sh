@@ -156,7 +156,7 @@ for phase in "${PHASES[@]}"; do
 
             next-group "Install Debian packages"
             apt-get install --reinstall -y -f ./dist/mkosi-debinit*.deb linux-image-amd64
-            dpkg-reconfigure linux-image-"$(ls /lib/modules | head -n1)"
+            dpkg-reconfigure linux-image-"$(find /lib/modules -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | head -n1)"
             ;;
         *)
             echo >&2 "Unknown phase '$phase'"
