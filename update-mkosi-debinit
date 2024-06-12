@@ -1,6 +1,14 @@
 #!/bin/bash
 # SPDX-License-Identifier: LGPL-2.1-or-later
 
+[[ -z ${1:-} ]] && exit 2
+
+LOGDIR=${LOGDIR:-/var/log/mkosi-debinit}
+LOGFILEBASE=$LOGDIR/$(date -Iseconds)
+mkdir -p "$LOGDIR" || (echo "cannot create logfiles" && exit 3)
+exec > "$LOGFILEBASE"-stdout.log
+exec 2> "$LOGFILEBASE"-stderr.log
+
 set -euxo pipefail
 
 command -v mkosi >/dev/null 2>&1 || exit 1
@@ -9,8 +17,6 @@ OUTPUT=$1
 VERSION=${2:-$(uname -r)}
 OUTPUTDIR=$(mktemp -d)
 ROOTFS=${ROOTFS:-}
-
-[[ -z $OUTPUT ]] && exit 2
 
 INITRD_CONFIG=
 [[ -d $ROOTFS/usr/lib/mkosi-debinit ]] && INITRD_CONFIG=/usr/lib/mkosi-debinit
