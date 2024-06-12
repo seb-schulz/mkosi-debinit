@@ -8,8 +8,10 @@ move () {
     local orig=$2
     local target=$3
 
-    mkdir -p "$(dirname "${target}""${path}")"
-    mv "${orig}""${path}" "${target}""${path}"
+    if [[ -e "${target}""${path}" ]]; then
+        mkdir -p "$(dirname "${target}""${path}")"
+        mv "${orig}""${path}" "${target}""${path}"
+    fi
 }
 
 MODULES_INCLUDE=(
