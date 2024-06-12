@@ -32,6 +32,7 @@ jobs:
         phase:
           - INITRD_BASIC
           - MKOSI_AND_KVM_CHECK
+          - CHECK_DPKG
     container:
       image: "${{ matrix.distro.name }}:${{ matrix.distro.tag }}"
       options: --privileged
@@ -42,7 +43,7 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v4
       - name: Install dependencies
-        run: ./scripts/setup.sh tests
+        run: ./scripts/setup.sh build tests
       - name: ${{ matrix.phase }} on ${{ matrix.distro.name }}:${{ matrix.distro.tag }}
         run: ./scripts/tests.sh ${{ matrix.phase }}
   build:

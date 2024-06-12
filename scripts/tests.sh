@@ -142,6 +142,22 @@ for phase in "${PHASES[@]}"; do
             # shellcheck disable=SC2012
             ls -lh "$TESTDIR" | tee -a "${GITHUB_STEP_SUMMARY:-/dev/null}"
             ;;
+        CHECK_DPKG)
+            next-group "Prepare Debian package testsuite"
+            command -v mkosi >/dev/null 2>&1 || exit 1
+            command -v kvm >/dev/null 2>&1 || exit 1
+            mkosi --version
+
+            TESTDIR=$(mktemp -d)
+            CLEANUP+=("$TESTDIR")
+
+            next-group "Build Debian package"
+            ./scripts/build.sh
+
+            next-group "Install Debian packages"
+            apt-get install --reinstall -y -f ./dist/mkosi-debinit*.deb linux-image-amd64
+            dpkg-reconfigure linux-image-"$(ls /lib/modules | head -n1)"
+            ;;
         *)
             echo >&2 "Unknown phase '$phase'"
             exit 1
