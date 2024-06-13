@@ -11,12 +11,12 @@ VERSION=$(dpkg-parsechangelog -SVersion)
 command -v gh >/dev/null 2>&1 || exit 1
 
 PACKAGES=(
-    dist/mkosi-debinit_"${VERSION}"_all.deb
-    dist/mkosi-debinit-core_"${VERSION}"_all.deb
+    mkosi-debinit
+    mkosi-debinit-core
 )
 
 for package in "${PACKAGES[@]}"; do
-    [[ -f $package ]] || exit 1
+    [[ -f dist/${package}_"${VERSION}"_all.deb ]] || exit 1
 done
 
 git tag v"${VERSION}"

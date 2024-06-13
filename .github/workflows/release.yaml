@@ -1,0 +1,48 @@
+---
+# SPDX-License-Identifier: LGPL-2.1-or-later
+
+name: Release
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "debian/changelog"
+jobs:
+  check:
+    if: github.repository == 'seb-schulz/mkosi-debinit'
+    runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    outputs:
+      eligable: ${{ steps.eligability.outputs.eligable || false }}
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+      - name: Check eligability
+        id: eligability
+        run: |
+          command -v dpkg-parsechangelog >/dev/null 2>&1 || exit 1
+          [[ $(dpkg-parsechangelog -SDistribution) = 'UNRELEASED' ]] || echo "eligable=true" >> "$GITHUB_OUTPUT"
+  build-and-release:
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    needs: check
+    if: needs.check.outputs.eligable == 'true'
+    container:
+      image: "docker.io/debian:testing"
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: ./scripts/setup.sh
+      - name: Build packages
+        run: ./scripts/build.sh
+      - name: Build packages
+        run: ./scripts/do-release.sh
