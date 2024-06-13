@@ -35,25 +35,17 @@ jobs:
       cancel-in-progress: true
     needs: check
     if: needs.check.outputs.eligable == 'true'
-    container:
-      image: "docker.io/debian:testing"
     steps:
-      - name: Install git # to force actions/checkout using git instead of REST call
-        run: apt update && apt install --no-install-recommends -y git ca-certificates
       - name: Repository checkout
         uses: actions/checkout@v4
-      - name: Install dependencies
-        run: ./scripts/setup.sh
+      - name: Build packages
+        run: make build
         env:
-          ONLY_BUILD: 1
-          WITH_GH: 1
-      - name: Configure Git
+          WITH_PODMAN: 1
+      - name: Build packages
         run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
-      - name: Build packages
-        run: ./scripts/build.sh
-      - name: Build packages
-        run: ./scripts/do-release.sh
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y pandoc
+          ./scripts/do-release.sh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

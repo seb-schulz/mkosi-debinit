@@ -17,7 +17,7 @@ build:
 ifeq ($(PODMAN),)
 	./scripts/$@.sh
 else
-	$(PODMAN) run --rm -v ${PWD}:/workspace:z --workdir=/workspace docker.io/debian:testing /bin/bash -c "/workspace/scripts/setup.sh && /workspace/scripts/$@.sh"
+	$(PODMAN) run --rm -v ${PWD}:/workspace:z --workdir=/workspace -e ONLY_BUILD=1 docker.io/debian:testing /bin/bash -c "/workspace/scripts/setup.sh && /workspace/scripts/$@.sh"
 endif
 
 .PHONY: lint
