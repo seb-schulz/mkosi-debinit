@@ -13,7 +13,7 @@ mkdir -p "$REPO"/pool
 for tag in $(gh release list --exclude-drafts --exclude-pre-releases --json name | jq -r '.[]|.name'); do
     for package in "${PACKAGES[@]}"; do
         package_path=${package}_${tag#v}_all.deb
-        curl https://github.com/seb-schulz/mkosi-debinit/releases/download/$tag/"$package_path" -L -o "$REPO"/pool/"$package_path"
+        curl https://github.com/seb-schulz/mkosi-debinit/releases/download/"$tag"/"$package_path" -L -o "$REPO"/pool/"$package_path"
     done
 done
 

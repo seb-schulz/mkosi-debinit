@@ -22,7 +22,7 @@ jobs:
       - name: Build repository
         run: ./scripts/build-repo.sh
       - name: Upload repository
-        use: actions/upload-pages-artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: repo/
       - name: Deploy to GitHub Pages
