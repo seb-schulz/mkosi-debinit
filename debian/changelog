@@ -6,7 +6,8 @@ mkosi-debinit (0.2.0) UNRELEASED; urgency=medium
   * Change working directory to output-dir when running update-mkosi-debinit to
     avoid fatals
   * Redirect errors and output to logfile
- -- Sebastian Schulz <16666034+seb-schulz@users.noreply.github.com>  Wed, 12 Jun 2024 16:24:48 +0000
+  * Improve documentation
+ -- Sebastian Schulz <16666034+seb-schulz@users.noreply.github.com>  Thu, 13 Jun 2024 17:16:02 +0200
 
 mkosi-debinit (0.1.1) unstable; urgency=medium
   * Add configs for mkosi
