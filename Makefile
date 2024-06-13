@@ -37,5 +37,5 @@ clean:
 
 .PHONY: dist-clean
 dist-clean: clean
-	rm -rf dist
+	rm -rf dist repo
 	$(MAKE) -f debian/rules clean

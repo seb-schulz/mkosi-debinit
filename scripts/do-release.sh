@@ -3,7 +3,6 @@
 
 set -euxo pipefail
 
-
 command -v dpkg-parsechangelog >/dev/null 2>&1 || exit 1
 
 [[ $(dpkg-parsechangelog -SDistribution) = 'UNRELEASED' ]] && exit 0
@@ -28,5 +27,6 @@ dpkg-parsechangelog -SChanges | tail -n+4 | pandoc -s -o dist/release-notes.md
 gh release create v"${VERSION}" \
     --generate-notes \
     --latest \
+    --draft \
     --notes-file=dist/release-notes.md \
     "${PACKAGES[@]}"
