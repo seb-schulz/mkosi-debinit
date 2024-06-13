@@ -12,9 +12,6 @@ jobs:
   check:
     if: github.repository == 'seb-schulz/mkosi-debinit'
     runs-on: ubuntu-22.04
-    permissions:
-      packages: write
-      contents: write
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -30,6 +27,9 @@ jobs:
           [[ $(dpkg-parsechangelog -SDistribution) = 'UNRELEASED' ]] || echo "eligable=true" >> "$GITHUB_OUTPUT"
   build-and-release:
     runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+      contents: write
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -38,11 +38,22 @@ jobs:
     container:
       image: "docker.io/debian:testing"
     steps:
+      - name: Install git # to force actions/checkout using git instead of REST call
+        run: apt update && apt install --no-install-recommends -y git ca-certificates
       - name: Repository checkout
         uses: actions/checkout@v4
       - name: Install dependencies
         run: ./scripts/setup.sh
+        env:
+          ONLY_BUILD: 1
+          WITH_GH: 1
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
       - name: Build packages
         run: ./scripts/build.sh
       - name: Build packages
         run: ./scripts/do-release.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
