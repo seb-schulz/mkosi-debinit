@@ -1,4 +1,4 @@
-mkosi-debinit (0.2.0) UNRELEASED; urgency=medium
+mkosi-debinit (0.2.0) unstable; urgency=medium
   * Add mkosi-debinit package as drop-in replacement for other
     initramfs builder
   * Add /etc/kernel/post*.d scripts
