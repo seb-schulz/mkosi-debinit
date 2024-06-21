@@ -1,3 +1,7 @@
+mkosi-debinit (0.3.0) UNRELEASED; urgency=medium
+  * TBD
+ -- Sebastian Schulz <16666034+seb-schulz@users.noreply.github.com>  Thu, 13 Jun 2024 22:09:03 +0200
+
 mkosi-debinit (0.2.0) unstable; urgency=medium
   * Add mkosi-debinit package as drop-in replacement for other
     initramfs builder

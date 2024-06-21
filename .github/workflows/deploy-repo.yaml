@@ -20,7 +20,14 @@ jobs:
       - name: Repository checkout
         uses: actions/checkout@v4
       - name: Build repository
-        run: ./scripts/build-repo.sh
+        run: |
+          export GNUPGHOME="$(mktemp -d /tmp/pgpkeys-XXXXXX)"
+          mkdir -p "$GNUPGHOME" && chmod 0700 $GNUPGHOME
+          echo "${{ secrets.SIGNKEY }}" | gpg --import
+
+          ./scripts/build-repo.sh
+          find $GNUPGHOME -type f -exec shred {} \;
+          rm -fr $GNUPGHOME
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload repository

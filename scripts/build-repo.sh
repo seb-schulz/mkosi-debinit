@@ -8,6 +8,7 @@ PACKAGES=(
     mkosi-debinit
     mkosi-debinit-core
 )
+SIGNING_KEY=05DF7C4C0BC4D76557B51538E9B8ABE948D99A75
 
 mkdir -p "$REPO"/pool
 for tag in $(gh release list --exclude-drafts --exclude-pre-releases --json name | jq -r '.[]|.name'); do
@@ -22,6 +23,8 @@ function finish {
     cd "$cPWD"
 }
 trap finish EXIT ERR
+
+[[ -f public.gpg ]] && cp public.gpg "$REPO"/
 
 cd "$REPO"/
 mkdir -p dists/testing/main/binary-{all,amd64}
@@ -62,3 +65,7 @@ EOF
 do_hash "MD5Sum" "md5sum" | tee -a Release
 do_hash "SHA1" "sha1sum" | tee -a Release
 do_hash "SHA256" "sha256sum" | tee -a Release
+
+# Do signing
+gpg --default-key "$SIGNING_KEY!" --clearsign < Release > InRelease
+gpg --default-key "$SIGNING_KEY!" --armor --detach-sign --sign < Release > Release.gpg

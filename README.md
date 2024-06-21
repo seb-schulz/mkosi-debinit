@@ -12,10 +12,11 @@ With the approach of building an image with mkosi, initramfs should become more 
 
 ## Installation
 
-Create a source list file for `apt`. For example:
+Add public key and create a source list file for `apt`. For example:
 
 ```shell
-echo "deb [trusted=yes] https://seb-schulz.github.io/mkosi-debinit testing main" | sudo tee /etc/apt/sources.list.d/mkosi-debinit.list
+curl -fsSL https://seb-schulz.github.io/mkosi-debinit/public.gpg | sudo tee /etc/apt/keyrings/mkosi-debinit.gpg > /dev/null
+echo "deb [signed-by=/etc/apt/keyrings/mkosi-debinit.gpg] https://seb-schulz.github.io/mkosi-debinit testing main" | sudo tee /etc/apt/sources.list.d/mkosi-debinit.list
 ```
 
 Run `sudo apt update` afterwards to fetch all relevant information about this repository.

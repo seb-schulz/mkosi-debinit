@@ -3,6 +3,8 @@ MKOSI_CACHE?=/tmp/mkosi-debinit.cache # Speedup cache
 TEST_PHASE?=INITRD_BASIC
 WITH_PODMAN?=$(if $(PODMAN),1,0)
 
+-include Makefile.local
+
 .PHONY: tests
 tests:
 ifeq ($(WITH_PODMAN),0)
@@ -39,3 +41,7 @@ clean:
 dist-clean: clean
 	rm -rf dist repo
 	$(MAKE) -f debian/rules clean
+
+.PHONY: build-repo
+build-repo:
+	./scripts/$@.sh
