@@ -1,8 +1,8 @@
 {
     "name": "mkosi-debinit",
-    "image": "docker.io/debian:testing",
+    "image": "docker.io/debian:testing@sha256:45461c02ed0ca82ae6fed79f4d9e8c8e1f503b5d237355ba10b8972386e490e7",
     "features": {
-        "ghcr.io/devcontainers/features/common-utils:2": {
+        "ghcr.io/devcontainers/features/common-utils:2@sha256:85c6505e809cc7c400b21997d7ae6f50811720d591813243f14d98cf2c577041": {
             "username": "vscode",
             "userUid": "1000",
             "userGid": "1000",
@@ -11,10 +11,10 @@
             "installOhMyZshConfig": "false",
             "nonFreePackages": "true"
         },
-        "ghcr.io/devcontainers-contrib/features/apt-get-packages:1": {
+        "ghcr.io/devcontainers-contrib/features/apt-get-packages:1@sha256:e978f0cd0b621d9ad5efec334408e5a6d3d2a65c99a9a60613115168e186d2c9": {
             "packages": "git,bash-completion"
         },
-        "ghcr.io/devcontainers-community/npm-features/prettier:1": {}
+        "ghcr.io/devcontainers-community/npm-features/prettier:1@sha256:41aca434d43373d78b276d3cd89ecdce960e0b618ff0ee59f2ecee0810dbabe9": {}
     },
     "customizations": {
         "vscode": {
