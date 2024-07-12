@@ -5,7 +5,7 @@
   "packageRules": [
     {
       "matchManagers": ["devcontainer", "github-actions"],
-      "groupName": "python-packages",
+      "groupName": "update-packages",
       "pinDigests": true
     }
   ]
