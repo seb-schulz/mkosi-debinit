@@ -4,7 +4,7 @@
   "rebaseWhen": "conflicted",
   "packageRules": [
     {
-      "matchManagers": ["devcontainer", "github-actions"],
+      "matchManagers": ["github-actions"],
       "groupName": "update-packages",
       "pinDigests": true
     }
