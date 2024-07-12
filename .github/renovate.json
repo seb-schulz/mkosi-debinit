@@ -1,0 +1,12 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "baseBranches": ["main"],
+  "rebaseWhen": "conflicted",
+  "packageRules": [
+    {
+      "matchManagers": ["devcontainer", "github-actions"],
+      "groupName": "python-packages",
+      "pinDigests": true
+    }
+  ]
+}
