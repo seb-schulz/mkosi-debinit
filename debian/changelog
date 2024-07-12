@@ -1,5 +1,5 @@
 mkosi-debinit (0.3.0) UNRELEASED; urgency=medium
-  * TBD
+  * Install systemd-repart for test suite
  -- Sebastian Schulz <16666034+seb-schulz@users.noreply.github.com>  Thu, 13 Jun 2024 22:09:03 +0200
 
 mkosi-debinit (0.2.0) unstable; urgency=medium

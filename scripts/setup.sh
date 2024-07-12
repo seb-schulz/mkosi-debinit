@@ -8,7 +8,7 @@ $SUDO apt-get update
 
 lint_packages=(lintian shellcheck)
 build_packages=(build-essential devscripts debhelper pandoc fakeroot)
-tests_packages=(mkosi qemu-system-x86 kmod jq systemd-boot cpio zstd systemd-ukify dosfstools mtools file linux-image-amd64)
+tests_packages=(mkosi qemu-system-x86 kmod jq systemd-boot cpio zstd systemd-ukify dosfstools mtools file linux-image-amd64 systemd-repart)
 
 [[ ${ONLY_BUILD:-} = "1" ]] && $SUDO apt-get install --no-install-recommends -y "${build_packages[@]}"
 [[ -z ${ONLY_BUILD:-} ]] && $SUDO apt-get install --no-install-recommends -y "${lint_packages[@]}" "${build_packages[@]}" "${tests_packages[@]}"
