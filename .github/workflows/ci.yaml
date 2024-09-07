@@ -51,7 +51,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     container:
-      image: "docker.io/debian:testing@sha256:f3402ed14b6b1c03036b14d46114e4c66e0401bba8a6ef40843f238efe0d93a6"
+      image: "docker.io/debian:testing@sha256:f8104e7584b5e5370d17b84fe487989ae8e3e3faacec012a04a852a7fbf616ae"
     steps:
       - name: Repository checkout
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
@@ -60,7 +60,7 @@ jobs:
       - name: Build packages
         run: ./scripts/build.sh
       - name: Upload packages
-        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
         with:
           name: packages
           path: dist/mkosi-debinit*.deb
@@ -69,7 +69,7 @@ jobs:
     strategy:
       fail-fast: false
     container:
-      image: "docker.io/debian:testing@sha256:f3402ed14b6b1c03036b14d46114e4c66e0401bba8a6ef40843f238efe0d93a6"
+      image: "docker.io/debian:testing@sha256:f8104e7584b5e5370d17b84fe487989ae8e3e3faacec012a04a852a7fbf616ae"
     needs: build
     steps:
       - name: Repository checkout
