@@ -21,7 +21,7 @@ on:
       - ".devcontainer.json"
 jobs:
   tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     concurrency:
       group: ${{ github.workflow }}-${{ toJSON(matrix.distro) }}-${{ matrix.phase }}-${{ github.ref }}
       cancel-in-progress: true
@@ -49,7 +49,7 @@ jobs:
       - name: ${{ matrix.phase }} on ${{ matrix.distro.name }}:${{ matrix.distro.tag }}
         run: ./scripts/tests.sh ${{ matrix.phase }}
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     container:
       image: "docker.io/debian:testing@sha256:f8104e7584b5e5370d17b84fe487989ae8e3e3faacec012a04a852a7fbf616ae"
     steps:
@@ -65,7 +65,7 @@ jobs:
           name: packages
           path: dist/mkosi-debinit*.deb
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
     container:
