@@ -43,7 +43,7 @@ jobs:
       volumes: ["/var/tmp:/var/tmp"]
     steps:
       - name: Repository checkout
-        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install dependencies
         run: ./scripts/setup.sh
       - name: ${{ matrix.phase }} on ${{ matrix.distro.name }}:${{ matrix.distro.tag }}
@@ -54,7 +54,7 @@ jobs:
       image: "docker.io/debian:testing@sha256:9e0fe246f9b448b7b39c4f910d8bc76ef50a170e311e7f199eebde5339bcc94f"
     steps:
       - name: Repository checkout
-        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Install dependencies
         run: ./scripts/setup.sh
       - name: Build packages
@@ -73,7 +73,7 @@ jobs:
     needs: build
     steps:
       - name: Repository checkout
-        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
         with:
           name: packages
