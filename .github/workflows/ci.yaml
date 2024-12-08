@@ -51,7 +51,7 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     container:
-      image: "docker.io/debian:testing@sha256:6e4f6fef9ab54627c1d7224d90259a0d059ac16ab0e37d35862449b41a8dd483"
+      image: "docker.io/debian:testing@sha256:52d9eacae5e6d813b01d8df534f28ce6fa7ccd50deb6647d94e69a81c8ba2abd"
     steps:
       - name: Repository checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -69,7 +69,7 @@ jobs:
     strategy:
       fail-fast: false
     container:
-      image: "docker.io/debian:testing@sha256:6e4f6fef9ab54627c1d7224d90259a0d059ac16ab0e37d35862449b41a8dd483"
+      image: "docker.io/debian:testing@sha256:52d9eacae5e6d813b01d8df534f28ce6fa7ccd50deb6647d94e69a81c8ba2abd"
     needs: build
     steps:
       - name: Repository checkout
