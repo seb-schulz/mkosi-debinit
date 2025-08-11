@@ -19,7 +19,7 @@ jobs:
       eligable: ${{ steps.eligability.outputs.eligable || false }}
     steps:
       - name: Repository checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - name: Check eligability
         id: eligability
         run: |
@@ -37,7 +37,7 @@ jobs:
     if: needs.check.outputs.eligable == 'true'
     steps:
       - name: Repository checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
       - name: Build packages
         run: make build
         env:
