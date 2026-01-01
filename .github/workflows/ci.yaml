@@ -43,7 +43,7 @@ jobs:
       volumes: ["/var/tmp:/var/tmp"]
     steps:
       - name: Repository checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       - name: Install dependencies
         run: ./scripts/setup.sh
       - name: ${{ matrix.phase }} on ${{ matrix.distro.name }}:${{ matrix.distro.tag }}
@@ -54,13 +54,13 @@ jobs:
       image: "docker.io/debian:testing@sha256:8ac1a6436385cbc6aee56b98a2671c26a26d1f74d6da42d58084c2179355edde"
     steps:
       - name: Repository checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
       - name: Install dependencies
         run: ./scripts/setup.sh
       - name: Build packages
         run: ./scripts/build.sh
       - name: Upload packages
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: packages
           path: dist/mkosi-debinit*.deb
@@ -73,8 +73,8 @@ jobs:
     needs: build
     steps:
       - name: Repository checkout
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
         with:
           name: packages
           path: dist/
