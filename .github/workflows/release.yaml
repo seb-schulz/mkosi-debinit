@@ -11,7 +11,7 @@ on:
 jobs:
   check:
     if: github.repository == 'seb-schulz/mkosi-debinit'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -19,14 +19,14 @@ jobs:
       eligable: ${{ steps.eligability.outputs.eligable || false }}
     steps:
       - name: Repository checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Check eligability
         id: eligability
         run: |
           command -v dpkg-parsechangelog >/dev/null 2>&1 || exit 1
           [[ $(dpkg-parsechangelog -SDistribution) = 'UNRELEASED' ]] || echo "eligable=true" >> "$GITHUB_OUTPUT"
   build-and-release:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       packages: write
       contents: write
@@ -37,7 +37,7 @@ jobs:
     if: needs.check.outputs.eligable == 'true'
     steps:
       - name: Repository checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - name: Build packages
         run: make build
         env:
